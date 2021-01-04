@@ -1,24 +1,17 @@
-import logo from './logo.svg';
+
+import { Route, Redirect, Switch } from 'react-router-dom';
+import Comments from './components/comments';
 import './App.css';
+import AddEditComment from './components/add-edit-comment';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Switch>
+      <Route path="/add-edit-comment" component={AddEditComment}></Route>
+      <Route path="/comments" component={Comments}></Route>
+      <Redirect from='/' exact to='/comments'></Redirect>
+      <Redirect to='/not-found'></Redirect>
+    </Switch>
   );
 }
 
