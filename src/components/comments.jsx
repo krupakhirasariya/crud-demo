@@ -45,7 +45,6 @@ class Comments extends Component {
         return (
             <div>
                 <ToastContainer></ToastContainer>
-                <h1>Comments render here</h1>
                 <div className="container">
                     <button className="btn btn-primary mb-2 float-right" onClick={this.addComment}>Add comment</button>
                     <table className="table table-bordered">
