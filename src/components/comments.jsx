@@ -13,7 +13,12 @@ class Comments extends Component {
         let { data } = await http.get(config.apiEndPoint);
         let comments = [...data];
         if (!!this.props.location.state) {
-            comments = [this.props.location.state.data, ...comments];
+            let result = comments.findIndex(index => index.id === this.props.location.state.id)
+            if (result >= 0) {
+                comments[result] = this.props.location.state;
+            } else {
+                comments = [this.props.location.state, ...comments];
+            }
         }
         this.setState({ comments });
     }

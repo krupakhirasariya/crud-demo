@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Joi from 'joi-browser';
 import config from '../config.json';
 import http from '../services/httpService';
-// import { toast } from 'react-toastify';
 
 class AddEditComment extends Component {
     state = {
@@ -12,8 +11,9 @@ class AddEditComment extends Component {
 
 
     componentDidMount() {
-        if (!!this.props.location.state.data) {
+        if (!!this.props.location.state && !!this.props.location.state.data) {
             let { data } = this.props.location.state;
+            delete data.postId;
             this.setState({ data });
         }
     }
@@ -58,7 +58,6 @@ class AddEditComment extends Component {
     };
 
     handleSubmit = e => {
-
         e.preventDefault();
         const errors = this.validate();
         this.setState({ errors: errors || {} });
@@ -66,22 +65,22 @@ class AddEditComment extends Component {
 
         const { data } = this.state;
         const commentData = {
+            id: data.id,
             name: data.name,
             email: data.email,
             body: data.body
         };
-        this.addComment(commentData);
-
+        this.addUpdateComment(commentData);
     };
 
-    async addComment(data) {
-        await http.post(config.apiEndPoint, data);
-        // toast.success('Comment added successfully!');
+    async addUpdateComment(data) {
+        !!data.id ? await http.put(`${config.apiEndPoint}/${data.id}`, data) :
+            await http.post(config.apiEndPoint, data);
         this.props.history.push('/comments', data);
     }
 
     render() {
-        const { errors } = this.state;
+        const { errors, data } = this.state;
         return (
             <div className="main">
                 <div className="container">
@@ -90,17 +89,17 @@ class AddEditComment extends Component {
                             <h3 className="text-center mb-2">Add Comment</h3>
                             <div className="form-group">
                                 <label htmlFor="name">Name</label>
-                                <input type="name" className="form-control" id="name" name="name" placeholder="name" onChange={this.handleChange} />
+                                <input type="name" className="form-control" id="name" name="name" placeholder="name" value={data.name} onChange={this.handleChange} />
                                 {!!errors['name'] && <div className="alert alert-danger">{errors['name']}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
-                                <input type="email" className="form-control" id="email" name="email" placeholder="email" onChange={this.handleChange} />
+                                <input type="email" className="form-control" id="email" name="email" placeholder="email" value={data.email} onChange={this.handleChange} />
                                 {!!errors['email'] && <div className="alert alert-danger">{errors['email']}</div>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="body" placeholder="description" >Description</label>
-                                <textarea id="body" className="form-control" name="body" onChange={this.handleChange}></textarea>
+                                <textarea id="body" className="form-control" name="body" onChange={this.handleChange} value={data.body}></textarea>
                                 {!!errors['body'] && <div className="alert alert-danger">{errors['body']}</div>}
                             </div>
                             <div className="form-group">
