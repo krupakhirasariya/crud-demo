@@ -6,11 +6,22 @@ import { BrowserRouter } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.css";
 import 'font-awesome/css/font-awesome.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
+
+const client = new ApolloClient({
+    link: new HttpLink({
+      uri: 'https://graphqlzero.almansi.me/api',
+    }),
+    cache: new InMemoryCache(),
+  });
+
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <ApolloProvider client={client}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </ApolloProvider>,
   document.getElementById('root')
 );
 
